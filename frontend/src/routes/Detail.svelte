@@ -1,10 +1,12 @@
 <script>
     import fastapi from "../lib/api"
+    import Error from "../components/Error.svelte"
 
     export let params = {}
     let question_id = params.question_id
     let question = {answers:[]}
     let content = ""
+    let error = {detail:[]}
 
     function get_question() {
         fastapi("get", "/api/question/detail/" + question_id, {}, (json) => {
@@ -22,7 +24,11 @@
         fastapi('post', url, params, 
             (json) => {
                 content = '' //등록되면 textarea 빈값처리
+                error = {detail:[]} //오류 발생 후 조정하여 성공 시 이전 에러 메세지 초기화
                 get_question()
+            },
+            (err_json) => {
+                error = err_json
             }
         )
     }
@@ -39,6 +45,8 @@
         <li>{answer.content}</li>
     {/each}
 </ul>
+
+<Error error={error} />
 
 <form method="post">
     <textarea rows="15" bind:value={content}></textarea>
