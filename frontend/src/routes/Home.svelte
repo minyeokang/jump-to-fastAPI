@@ -3,6 +3,8 @@
     import fastapi from "../lib/api";
     import { link } from 'svelte-spa-router'
     import { page } from "../lib/store"
+    import moment from 'moment/min/moment-with-locales'
+    moment.locale('ko')
     let question_list = []
   //빈 배열 만들고 데이터 조회하여 얻은 데이터 변수에 넣고 호출하기
     let size = 10
@@ -39,7 +41,7 @@
             <td>
                 <a use:link href="/detail/{question.id}">{question.subject}</a>
             </td>
-            <td>{question.create_date}</td>
+            <td>{moment(question.create_date).format("YYYY년 MM월 DD일 hh:mm a")}</td>
         </tr>
         {/each}
         </tbody>
